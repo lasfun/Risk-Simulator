@@ -5,117 +5,110 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 
 def main():
-    # 1. Collect user inputs for the simulation
     try:
         ticker_symbol = input("Ticker symbol (e.g., AAPL, MSFT): ").strip().upper()
         days = int(input("Time horizon in days (e.g., 365): ").strip())
-        if days <= 0:
-            raise ValueError("Number of days must be a positive integer.")
+        simulations = int(input("Number of simulations (e.g., 1000): ").strip())
+
+        if days <= 0 or simulations <= 0:
+            raise ValueError("Days and simulations must be positive integers.")
     except ValueError as ve:
         sys.exit(f"Input Error: {ve}")
-    
-    # 2. Fetch the latest market price and run simulation
+
     start_price = get_live_price(ticker_symbol)
     drift, volatility = get_historical_parameters(ticker_symbol)
-    
-    prices = simulate_prices(start_price, days, volatility, drift)
-    
-    # 3. Calculate statistical risk metrics
-    max_p, min_p, avg_p, var_95 = calculate_metrics(prices)
-    
-    # 4. Display the results in the terminal
+
+    price_paths = monte_carlo_simulation(
+        start_price, days, simulations, volatility, drift
+    )
+
+    metrics = calculate_metrics(price_paths)
+
     print("-" * 30)
-    print(f"Simulation for {days} days completed.")
-    print(f"Ticker: {ticker_symbol.upper()}")
+    print(f"Monte Carlo Simulation Completed")
+    print(f"Ticker: {ticker_symbol}")
+    print(f"Simulations: {simulations}")
+    print(f"Time Horizon: {days} days")
     print(f"Starting Price: {start_price:.2f}€")
-    print(f"Highest price: {max_p:.2f}€")
-    print(f"Lowest price: {min_p:.2f}€")
-    print(f"Average: {avg_p:.2f}€")
-    print(f"VaR (95% Confidence Level): {var_95:.2f}€")
-    print(f"Final price: {prices[-1]:.2f}€")
-    plot_prices(prices)
+    print(f"Average Final Price: {metrics['average']:.2f}€")
+    print(f"Min Final Price: {metrics['min']:.2f}€")
+    print(f"Max Final Price: {metrics['max']:.2f}€")
+    print(f"VaR (95% Confidence): {metrics['var_95']:.2f}€")
+
+    plot_prices(price_paths)
+
 
 def get_live_price(ticker_symbol):
-    """Fetches the latest closing price using yfinance."""
-    try:
-        ticker = yf.Ticker(ticker_symbol)
-        # Fetch 5 days to ensure we get data even on weekends
-        data = ticker.history(period="5d")
-        
-        if data.empty:
-            sys.exit(f"Error: No data found for ticker '{ticker_symbol}'.")
-            
-        # Use .iloc[-1] to get the most recent closing price
-        return data['Close'].iloc[-1]
-    except Exception as e:
-        sys.exit(f"Error fetching live price: {e}")
-    
+    ticker = yf.Ticker(ticker_symbol)
+    data = ticker.history(period="5d")
+
+    if data.empty:
+        sys.exit(f"No data found for ticker '{ticker_symbol}'.")
+
+    return data["Close"].iloc[-1]
+
+
 def get_historical_parameters(ticker_symbol):
-    """Calculates drift and volatility from the last year of market data."""
-    try:
-        ticker = yf.Ticker(ticker_symbol)
-        # Fetch 1 year of historical data
-        data = ticker.history(period="1y")
-        
-        if len(data) < 20:
-            sys.exit("Error: Not enough historical data to calculate drift.")
+    ticker = yf.Ticker(ticker_symbol)
+    data = ticker.history(period="1y")
 
-        # Calculate daily percentage changes
-        # (Price_today / Price_yesterday) - 1
-        returns = data['Close'].pct_change().dropna()
+    if len(data) < 20:
+        sys.exit("Not enough historical data.")
 
-        # Calculate average daily return and annualize it (252 trading days)
-        avg_daily_return = returns.mean()
-        drift = avg_daily_return * 252
-        
-        # Bonus: We can also calculate volatility automatically!
-        volatility = returns.std() * math.sqrt(252)
+    returns = data["Close"].pct_change().dropna()
 
-        return drift, volatility
-    except Exception as e:
-        sys.exit(f"Error calculating historical parameters: {e}")
+    drift = returns.mean() * 252
+    volatility = returns.std() * math.sqrt(252)
+
+    return drift, volatility
 
 
-def simulate_prices(start_price, days, volatility, drift):
-    """Simulates a price path using Geometric Brownian Motion (GBM)."""
+def simulate_single_path(start_price, days, volatility, drift):
     prices = [start_price]
-    # Time step (daily, assuming 365 days per year)
-    dt = 1/365
-    
+    dt = 1 / 365
+
     for _ in range(days):
-        epsilon = random.gauss(0, 1)
-        # GBM formula: S_t = S_0 * exp((mu - 0.5 * sigma^2) * dt + sigma * epsilon * sqrt(dt))
-        change = math.exp((drift - 0.5 * volatility**2) * dt + 
-                          volatility * epsilon * math.sqrt(dt))
+        z = random.gauss(0, 1)
+        change = math.exp(
+            (drift - 0.5 * volatility ** 2) * dt
+            + volatility * math.sqrt(dt) * z
+        )
         prices.append(prices[-1] * change)
+
     return prices
 
+
+def monte_carlo_simulation(start_price, days, simulations, volatility, drift):
+    return [
+        simulate_single_path(start_price, days, volatility, drift)
+        for _ in range(simulations)
+    ]
+
+
 def calculate_metrics(price_paths):
-    """Calculates key risk indicators from the simulated data."""
-    max_price = max(price_paths)
-    min_price = min(price_paths)
-    avg_price = sum(price_paths) / len(price_paths)
-    
-    # Value at Risk (VaR) at 95% confidence:
-    # We sort the simulated prices and find the 5th percentile
-    sorted_prices = sorted(price_paths)
+    final_prices = [path[-1] for path in price_paths]
+    sorted_prices = sorted(final_prices)
+
     index_95 = int(0.05 * len(sorted_prices))
-    var_95 = sorted_prices[index_95]
 
-    return max_price, min_price, avg_price, var_95
+    return {
+        "min": min(final_prices),
+        "max": max(final_prices),
+        "average": sum(final_prices) / len(final_prices),
+        "var_95": sorted_prices[index_95],
+    }
 
-def plot_prices(prices):
-    """Optional: Plots the simulated price path."""
-    try:
-        import matplotlib.pyplot as plt
-        plt.plot(prices)
-        plt.title("Simulated Price Path")
-        plt.xlabel("Days")
-        plt.ylabel("Price (€)")
-        plt.grid(True)
-        plt.show()
-    except ImportError:
-        print("matplotlib is not installed. Skipping plot.")
+
+def plot_prices(price_paths):
+    for path in price_paths[:50]:  # limit plotting for readability
+        plt.plot(path, alpha=0.4)
+
+    plt.title("Monte Carlo GBM Price Simulation")
+    plt.xlabel("Days")
+    plt.ylabel("Price (€)")
+    plt.grid(True)
+    plt.show()
+
 
 if __name__ == "__main__":
     main()
