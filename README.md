@@ -1,6 +1,6 @@
-# Energy Risk Simulator
+# Risk Simulator
 
-#### Video Demo: <URL zu deinem Video später einfügen>
+#### Video Demo: <URL zu Video hinzufügen>
 
 ## Description
 This project is a **Monte Carlo Simulation** tool designed to forecast potential price developments for financial assets or energy commodities. 
@@ -19,4 +19,4 @@ Formula: $dS_t = \mu S_t dt + \sigma S_t dW_t$
 ## Installation
 1. Clone this repository.
 2. Install dependencies: `pip install -r requirements.txt`.
-3. Run the application: `python Energy_Risk_Simulator.py`.
+3. Run the application: `python project_risk_simulator.py`.
