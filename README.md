@@ -10,10 +10,12 @@ The **Risk Simulator** is a Python-based command-line tool designed to forecast 
 
 The project follows a four-stage pipeline: **Data acquisition**, **Parameter Estimation**, **Simulation**, and **Visualization**.
 
-**1. Data Integration**
+**1. Data Integration**:
+
 The tool uses the yfinance API to fetch live data. Instead of requiring the user to enter current prices or volatility, the program automatically downloads the last 252 trading days (one year) of historical data for any given ticker symbol. 
 
-**2. Financial Logic & Mathematical Modelling**
+**2. Financial Logic & Mathematical Modelling**:
+
 The core engine of the simulation is based on the Geometric Brownian Motion (**GBM**). Financial markets are rarely predictable, but GBM provides a mathematically sound way to model random walks with a drift.
 
 The simulation uses the following stochastic differential equation: 
