@@ -98,14 +98,27 @@ def calculate_metrics(price_paths):
         "var_95": sorted_prices[index_95],
     }
 
+def compute_average_path(price_paths):
+    num_days = len(price_paths[0])
+    average_path = []
+
+    for day in range(num_days):
+        day_sum = sum(path[day] for path in price_paths)
+        average_path.append(day_sum / len(price_paths))
+
+    return average_path
 
 def plot_prices(price_paths):
     for path in price_paths[:50]:  # limit plotting for readability
-        plt.plot(path, alpha=0.4)
+        plt.plot(path, alpha=0.3)
+# plot average path
+    average_path = compute_average_path(price_paths)
+    plt.plot(average_path, color='black', linewidth=2, label='Average Path')
 
     plt.title("Monte Carlo GBM Price Simulation")
     plt.xlabel("Days")
     plt.ylabel("Price (€)")
+    plt.legend()
     plt.grid(True)
     plt.show()
 

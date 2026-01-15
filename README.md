@@ -58,14 +58,15 @@ From the distribution of final simulated prices, the program computes:
 
 These metrics provide a quantitative estimate of downside risk over the selected time horizon.
 ### 5. Visualization
-The program plots a subset of simulated price paths using matplotlib, allowing the user to visually assess volatility and dispersion.
+The program plots a subset of simulated price paths using matplotlib, allowing the user to visually assess volatility and dispersion. On top of that an avarage path is computed and plotted to give a better overview.
 ## Project Structure and Functions
-`get_live_price`: Fetches the most recent closing price.
-'get_historical_parameters': Computes drift and volatility from historical data.
-`simulate_single_path`: Generates one GBM price path.
-`monte_carlo_simulation`: Runs multiple independent simulations.
-`calculate_metrics`: Computes summary statistics and Value at Risk.
-`plot_prices`: Visualizes simulated price paths.
+- `get_live_price`: Fetches the most recent closing price.
+- `get_historical_parameters`: Computes drift and volatility from historical data.
+- `simulate_single_path`: Generates one GBM price path.
+- `monte_carlo_simulation`: Runs multiple independent simulations.
+- `calculate_metrics`: Computes summary statistics and Value at Risk.
+- `compute_average_path`: Computes an average path for plotting.
+- `plot_prices`: Visualizes simulated price paths.
 ## Assumptions and Limitations
 Assumes constant drift and volatility
 Prices follow a log-normal distribution
