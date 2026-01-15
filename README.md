@@ -43,7 +43,9 @@ From historical daily returns, the following parameters are calculated:
 
 Price evolution is modeled using Geometric Brownian Motion (GBM).
 Each simulation applies the discretized GBM formula:
-$S_t+1 = S_t * exp((\mu - 1/2 \sigma^2)\delta t + \sigma sqrt{\delta t}  * Z_t)$
+
+$$S_{t+1} = S_t \cdot \exp\left(\left(\mu - \frac{1}{2}\sigma^2\right)\Delta t + \sigma \sqrt{\Delta t} \cdot Z_t\right)$$
+
 where $Z_t$ is a standard normal random variable.
 This process is repeated across many independent simulations to generate a distribution of possible future prices.
 ### 4. Risk Metrics and Analysis
@@ -71,5 +73,5 @@ No dividends, transaction costs, or jumps
 Results are probabilistic, not predictive
 This project is intended for educational purposes only and is not financial advice.
 ## Dependencies
-'yfinance'
-'matplotlib'
+`yfinance`
+`matplotlib`
