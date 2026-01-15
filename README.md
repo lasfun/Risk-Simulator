@@ -22,9 +22,9 @@ $dS_t =  \mu S_t dt + \sigma S_t dW_t$
 
 In this implementation:
 
-**Drift($mu$)** : Calculated as the annualized average daily return of the asset.
+**Drift($\mu$)** : Calculated as the annualized average daily return of the asset.
 
-**Volatility($sigma$)**: Derived from the standard deviation of historical returns.
+**Volatility($\sigma$)**: Derived from the standard deviation of historical returns.
 
 **Wiener Process($W_t$)**: Generated using Python's `random.gauss(0, 1)` to simulate daily market shocks.
 
