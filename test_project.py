@@ -10,6 +10,13 @@ def test_calculate_metrics():
     assert avg_p == 30.0
     assert var_95 == 10.0 # 5% quantile should be smallest with 5 data points
 
+def test_compute_average_path():
+    path1 = [10, 20, 30]
+    path2 = [20, 40, 60]
+    
+    result = compute_average_path([path1, path2])
+    assert result == [15.0, 30.0, 45.0]
+
 def test_simulation_length():
     # Checks if the number of simulated days is correct
     days = 365
