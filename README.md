@@ -22,11 +22,11 @@ $dS_t =  \mu S_t dt + \sigma S_t dW_t$
 
 In this implementation:
 
-**Drift(\mu)** : Calculated as the annualized average daily return of the asset.
+**Drift($mu$)** : Calculated as the annualized average daily return of the asset.
 
-**Volatility(\sigma)**: Derived from the standard deviation of historical returns.
+**Volatility($sigma$)**: Derived from the standard deviation of historical returns.
 
-**Wiener Process(W_t)**: Generated using Python's `random.gauss(0, 1)` to simulate daily market shocks.
+**Wiener Process($W_t$)**: Generated using Python's `random.gauss(0, 1)` to simulate daily market shocks.
 
 ## Risk Metrics and Analysis
 Beyond just plotting a line, this program calculates the Value at Risk (**VaR**). By analyzing the simulated path, the tool identifies the "worst-case-scenario" at a 95% confidence level, helping a user understand how much capital might be at risk over the chosen time horizon.
