@@ -29,11 +29,11 @@ def main():
     print(f"Ticker: {ticker_symbol}")
     print(f"Simulations: {simulations}")
     print(f"Time Horizon: {days} days")
-    print(f"Starting Price: {start_price:.2f}€")
-    print(f"Average Final Price: {metrics['average']:.2f}€")
-    print(f"Min Final Price: {metrics['min']:.2f}€")
-    print(f"Max Final Price: {metrics['max']:.2f}€")
-    print(f"VaR (95% Confidence): {metrics['var_95']:.2f}€")
+    print(f"Starting Price: {start_price:.2f}$")
+    print(f"Average Final Price: {metrics['average']:.2f}$")
+    print(f"Min Final Price: {metrics['min']:.2f}$")
+    print(f"Max Final Price: {metrics['max']:.2f}$")
+    print(f"VaR (95% Confidence): {metrics['var_95']:.2f}$")
 
     plot_prices(price_paths)
 
@@ -65,7 +65,7 @@ def get_historical_parameters(ticker_symbol):
 
 def simulate_single_path(start_price, days, volatility, drift):
     prices = [start_price]
-    dt = 1 / 365
+    dt = 1 / 252
 
     for _ in range(days):
         z = random.gauss(0, 1)
@@ -111,7 +111,7 @@ def compute_average_path(price_paths):
 def plot_prices(price_paths):
     for path in price_paths[:50]:  # limit plotting for readability
         plt.plot(path, alpha=0.3)
-# plot average path
+    # plot average path
     average_path = compute_average_path(price_paths)
     plt.plot(average_path, color='black', linewidth=2, label='Average Path')
 
