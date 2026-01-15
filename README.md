@@ -1,5 +1,5 @@
 # Risk Simulator: Financial Forecasting with GBM
-**Video Demo: <URL>**
+**Video Demo: <https://youtu.be/5uOm9Z0aNjM>**
 ## Project Overview
 The Risk Simulator is a Python-based command-line tool that forecasts future price movements of financial assets using historical market data and stochastic modeling. By applying Geometric Brownian Motion (GBM) and Monte Carlo simulation, the program generates multiple possible price paths and quantifies downside risk using statistical metrics.
 
@@ -13,7 +13,7 @@ This project was developed as part of CS50 and is also intended as a portfolio p
 
 **Run the Program**
 
-`python project_risk_simulator.py`
+`python project.py`
 
 You will be prompted to enter:
 
