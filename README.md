@@ -13,7 +13,7 @@ This project was developed as part of CS50 and is also intended as a portfolio p
 
 **Run the Program**
 
-`python risk_simulator.py`
+`python project_risk_simulator.py`
 
 You will be prompted to enter:
 
