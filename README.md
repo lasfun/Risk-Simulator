@@ -5,7 +5,7 @@ The Risk Simulator is a Python-based command-line tool that forecasts future pri
 
 This project was developed as part of CS50 and is also intended as a portfolio project demonstrating applied probability, data analysis, and Python programming.
 
-### Quick Start
+## Quick Start
 
 **Requirements**
 
@@ -17,9 +17,9 @@ This project was developed as part of CS50 and is also intended as a portfolio p
 
 You will be prompted to enter:
 
-a ticker symbol (e.g., AAPL)
-a time horizon in days
-the number of Monte Carlo simulations
+- a ticker symbol (e.g., AAPL)
+- a time horizon in days
+- the number of Monte Carlo simulations
 
 The program prints summary statistics in the terminal and plots simulated price paths.
 
@@ -29,19 +29,22 @@ The project follows a four-stage pipeline:
 
 ### 1. Data Acquisition
 The program uses the yfinance API to fetch:
-the most recent closing price (used as the initial price)
-one year of historical data (≈252 trading days) for parameter estimation
+
+- most recent closing price (used as initial price) 
+- one year of historical data (≈252 trading days) for parameter estimation
+
 ### 2. Parameter Estimation
+
 From historical daily returns, the following parameters are calculated:
-Drift (μ)
-Average daily return, annualized using 252 trading days.
-Volatility (σ)
-Standard deviation of daily returns, annualized.
+- Drift ($\mu$): Average daily return, annualized using 252 trading days.
+- Volatility ($\sigma$): Standard deviation of daily returns, annualized.
+
 ### 3. Monte Carlo Price Simulation
+
 Price evolution is modeled using Geometric Brownian Motion (GBM).
 Each simulation applies the discretized GBM formula:
-Sₜ₊₁ = Sₜ · exp((μ − ½σ²)Δt + σ√Δt · Zₜ)
-where Zₜ is a standard normal random variable.
+$S_t+1 = S_t * exp((\mu - 1/2 \sigma^2)\delta t + \sigma sqrt{\delta t}  * Z_t)$
+where $Z_t$ is a standard normal random variable.
 This process is repeated across many independent simulations to generate a distribution of possible future prices.
 ### 4. Risk Metrics and Analysis
 From the distribution of final simulated prices, the program computes:
